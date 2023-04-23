@@ -1,45 +1,62 @@
--- DROP TABLES
-DROP TABLE departments;
-DROP TABLE dept_emp;
-DROP TABLE dept_manager;
-DROP TABLE employees;
-DROP TABLE salaries;
-DROP TABLE titles;
+-- DROP TABLES, along with dependents
+DROP TABLE departments CASCADE;
+DROP TABLE dept_emp CASCADE;
+DROP TABLE dept_manager CASCADE;
+DROP TABLE employees CASCADE;
+DROP TABLE salaries CASCADE;
+DROP TABLE titles CASCADE;
 
---CREATE TABLES FOR EACH CSV FILE
+-- CREATE TABLES FOR EACH CSV FILE
+
 CREATE TABLE departments (
-	dept_no VARCHAR NOT NULL,
-	dept_name VARCHAR NOT NUll);
+	dept_no VARCHAR(10) PRIMARY KEY,
+	dept_name VARCHAR(30) NOT NULL 
+);
 
-CREATE TABLE dept_emp (
-	emp_no INT,
-	dept_no VARCHAR NOT NUll);
-	
-CREATE TABLE dept_manager (
-	dept_no VARCHAR NOT NULL,
-	emp_no INT);
+CREATE TABLE titles (
+	title_id VARCHAR(10) PRIMARY KEY,
+	title VARCHAR(30) NOT NULL 
+);
 
 CREATE TABLE employees (
-	emp_no INT,
-	emp_title_id VARCHAR NOT NUll,
-	birth_date DATE,
-	first_name VARCHAR,
-	last_name VARCHAR,
-	sex VARCHAR,
-	hire_date DATE);
+	emp_no INT PRIMARY KEY,
+	emp_title_id VARCHAR(10) NOT NUll,
+	FOREIGN KEY (emp_title_id) REFERENCES titles(title_id),
+	birth_date DATE NOT Null,
+	first_name VARCHAR(30) NOT Null,
+	last_name VARCHAR(30) NOT Null,
+	sex VARCHAR(5) NOT Null,
+	hire_date DATE NOT Null
+);
+
+-- JUNCTION TABLE
+CREATE TABLE dept_emp (
+	emp_no INT NOT NULL,
+	FOREIGN KEY (emp_no) REFERENCES employees(emp_no),
+	dept_no VARCHAR(10) NOT NULL, 
+	FOREIGN KEY (dept_no) REFERENCES departments(dept_no),
+	PRIMARY KEY (emp_no, dept_no)
+);
+
+-- JUNCTION TABLE
+CREATE TABLE dept_manager (
+	dept_no VARCHAR(10) NOT NULL,
+	FOREIGN KEY (dept_no) REFERENCES departments(dept_no),
+	emp_no INT NOT NULL, 
+	FOREIGN KEY (emp_no) REFERENCES employees(emp_no),
+	PRIMARY KEY (dept_no, emp_no)
+);
 	
 CREATE TABLE salaries (
-	emp_no INT,
-	salary INT);
+	emp_no INT NOT NULL,
+	salary INT NOT NULL,
+	FOREIGN KEY (emp_no) REFERENCES employees(emp_no)
+);
 	
-CREATE TABLE titles (
-	title_id VARCHAR NOT NULL,
-	title VARCHAR NOT NULL);
-	
--- VIEW TABLE
-SELECT * FROM departments
-SELECT * FROM dept_emp
-SELECT * FROM dept_manager
-SELECT * FROM employees
-SELECT * FROM salaries
-SELECT * FROM titles
+-- VIEW TABLES
+SELECT * FROM departments;
+SELECT * FROM titles;
+SELECT * FROM employees;
+SELECT * FROM dept_emp;
+SELECT * FROM dept_manager;
+SELECT * FROM salaries;

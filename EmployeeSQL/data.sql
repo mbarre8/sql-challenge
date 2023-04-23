@@ -9,7 +9,7 @@ e.emp_no = s.emp_no;
 SELECT first_name, last_name, hire_date 
 FROM employees
 WHERE hire_date >= '1986-01-01'
-	and hire_date <= '1986-12-31'
+	and hire_date <= '1986-12-31';
 	
 -- List the manager of each department along with their department number, department name, employee number, last name, and first name.
 Select t.title_id, d.dept_no, f.dept_name, e.emp_no, e.last_name, e.first_name 
